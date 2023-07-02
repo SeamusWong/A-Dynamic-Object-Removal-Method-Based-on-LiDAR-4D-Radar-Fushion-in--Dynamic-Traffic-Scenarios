@@ -1,0 +1,11 @@
+<launch>
+
+    <node name="Dynamic_flow_node" pkg="Dynamic_Flow" type="Dynamic_flow" args=   
+                "/home/seamus-wong/Code_Workstation/VOD/lidar/training/label_2/S11 
+                /home/seamus-wong/Code_Workstation/VOD/radar/training/velodyne/S11 
+                /home/seamus-wong/Code_Workstation/VOD/lidar/training/velodyne/S11 
+                /home/seamus-wong/Code_Workstation/VOD/radar/training/calib/00000.txt 
+                /home/seamus-wong/Code_Workstation/VOD/lidar/training/calib/00000.txt 
+                158" required="false" output="screen" />
+
+</launch>
