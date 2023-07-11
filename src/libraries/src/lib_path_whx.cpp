@@ -123,54 +123,6 @@ PathDataWHX &PathDataWHX::AddPointFromMatrix4fForPose(Eigen::Matrix4f m_mat_last
     return *this;
 }
 
-double FAPPSR(double m_num)
-{
-    std::srand(clock());
-    double result = 0.0;
-    result = m_num * ((double)std::rand() / RAND_MAX);
-    if (((double)std::rand() / RAND_MAX) > 0.5)
-    {
-        result = -result;
-    }
-    return result;
-}
-
-PathDataWHX &LIB_PATH_WHX::PathDataWHX::FAPP(Eigen::Matrix4f m_mat, ros::Time m_time)
-{
-    Eigen::Vector3f translation_vec = m_mat.block<3, 1>(0, 3);
-    for (int count = 0; count < this->m_path.poses.size(); count++)
-    {
-        this->m_path.poses.at(count).pose.position.x += translation_vec(0);
-        this->m_path.poses.at(count).pose.position.y += translation_vec(1);
-        // this->m_path.poses.at(count).pose.position.z += translation_vec(2);
-    }
-
-    Eigen::Matrix3f rotation_mat = m_mat.block<3, 3>(0, 0);
-    float yaw = std::atan2(rotation_mat(1, 0), rotation_mat(0, 0));
-    if(std::abs(yaw) > 0.1)
-    {
-        yaw+=FAPPSR(0.01);
-    }
-    else
-    {
-        yaw += FAPPSR(0.001);
-    }
-    for (int count = 0; count < this->m_path.poses.size(); count++)
-    {
-        this->m_path.poses.at(count).pose.position.x = this->m_path.poses.at(count).pose.position.x * std::cos(yaw) - this->m_path.poses.at(count).pose.position.y * std::sin(yaw) + FAPPSR(0.001);
-        this->m_path.poses.at(count).pose.position.y = this->m_path.poses.at(count).pose.position.x * std::sin(yaw) + this->m_path.poses.at(count).pose.position.y * std::cos(yaw) + FAPPSR(0.0001);
-    }
-
-    geometry_msgs::PoseStamped point_next;
-    point_next.header.stamp = m_time;
-    point_next.pose.position.x = 0;
-    point_next.pose.position.y = 0;
-    point_next.pose.position.z = 0;
-
-    this->m_path.poses.push_back(point_next);
-    return *this;
-}
-
 void PathDataWHX::PublishToRviz(ros::Publisher &m_publisher, const std::string m_frame_id)
 {
     for (int count = 0; count < this->m_path.poses.size(); count++)
